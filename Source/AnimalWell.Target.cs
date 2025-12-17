@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ public class AnimalWellTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V6;
-
-		ExtraModuleNames.AddRange( new string[] { "AnimalWell" } );
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
+		ExtraModuleNames.Add("AnimalWell");
 	}
 }
