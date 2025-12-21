@@ -19,4 +19,8 @@ protected:
 	TSharedPtr<class SWidget> MenuWidgetContainer; //²Ëµ¥UI WidgetÈİÆ÷Ö¸Õë
 
 	virtual void BeginPlay() override;
+
+public:
+	void ShowMenu();
+	void RemoveMenu();
 };

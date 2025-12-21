@@ -15,6 +15,6 @@ AMenuGameMode::AMenuGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
-	PlayerControllerClass = APlayerController::StaticClass();
+	PlayerControllerClass = AMenuPlayerController::StaticClass();
 	HUDClass = AMenuHUD::StaticClass();
 }
