@@ -22,11 +22,20 @@ public:
 	FReply OnPlayClicked() const;
 	FReply OnQuitClicked() const;
 
+	//Settings 相关
+	FReply OnSettingsClicked();
+	void OnBrightnessChanged(float NewValue);
+
 	TWeakObjectPtr<class AMenuHUD> OwningHUD;	//存储传进来的AMenuHUD
+
+	// 是否正在显示设置面板
+	bool bShowingSettings = false;
+
+	// 保存顶层 Overlay 的引用（便于构造后操作）
+	TSharedPtr<class SOverlay> RootOverlay;
 
 	virtual bool SupportsKeyboardFocus() const override
 	{
 		return true;
-	}	//允许这个Widget接收键盘焦点，block掉无用报错
-
+	}	//允许这个Widget接收键盘焦点，抑制相关警告
 };

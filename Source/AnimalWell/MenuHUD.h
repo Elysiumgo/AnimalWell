@@ -15,12 +15,22 @@ class ANIMALWELL_API AMenuHUD : public AHUD
 	GENERATED_BODY()
 	
 protected:
-	TSharedPtr<class SMenuWidget> MenuWidget;	//菜单UI Widget指针
-	TSharedPtr<class SWidget> MenuWidgetContainer; //菜单UI Widget容器指针
+	TSharedPtr<class SWidget> MenuWidgetContainer; // 菜单 UI Widget 容器指针
+	TSharedPtr<class SMenuWidget> MenuWidget;	// 菜单 UI Widget 指针
 
 	virtual void BeginPlay() override;
 
 public:
 	void ShowMenu();
 	void RemoveMenu();
+
+	// 新增：设置并应用画面亮度（示例范围 0.0 - 2.0）
+	void SetScreenBrightness(float NewBrightness);
+
+	// 供 SMenuWidget 读取当前亮度（若需要）
+	float GetCurrentScreenBrightness() const { return CurrentScreenBrightness; }
+
+private:
+	// 当前存储的亮度值，默认 1.0
+	float CurrentScreenBrightness = 1.0f;
 };
