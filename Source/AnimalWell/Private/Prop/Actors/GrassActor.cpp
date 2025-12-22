@@ -23,7 +23,7 @@ void AGrassActor::OnConstruction(const FTransform& Transform)
 
 void AGrassActor::ActionEvent(FVector BeginLoaction)
 {
-	GrassSpriteComp->SetScaleParameterValueOnMaterials(TEXT("FlutValue"),5);
+	GrassSpriteComp->SetScaleParameterValueOnMaterials(TEXT("FlutValue"),2);
 	FTimerHandle GrassHandle;
 	GetWorld()->GetTimerManager().SetTimer(GrassHandle,this,&AGrassActor::StopFlut,1.5f,false);
 }
