@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 #include "BasePropActor.generated.h"
+
 
 UCLASS()
 class ANIMALWELL_API ABasePropActor : public AActor
@@ -18,6 +20,15 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	//添加碰撞盒组件，在蓝图里可见
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Prop")
+	UBoxComponent* CollisionBox;
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+
 
 public:	
 	// Called every frame

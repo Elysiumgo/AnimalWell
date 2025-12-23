@@ -2,15 +2,18 @@
 
 
 #include "Prop/Actors/GrassActor.h"
-
 #include "PaperSprite.h"
 #include "Prop/Components/AnimalWellPaperSpriteComponent.h"
+#include "Components/BoxComponent.h"
 
 AGrassActor::AGrassActor()
 {
-	RootComponent  = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp0"));
+	//直接把草的Sprite挂在父类已经建好的碰撞箱上
 	GrassSpriteComp = CreateDefaultSubobject<UAnimalWellPaperSpriteComponent>(TEXT("GrassSpriteComp0"));
-	GrassSpriteComp->SetupAttachment(RootComponent);
+
+	if (CollisionBox){
+		GrassSpriteComp->SetupAttachment(CollisionBox);
+	}
 }
 
 void AGrassActor::OnConstruction(const FTransform& Transform)
