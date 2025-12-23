@@ -27,6 +27,8 @@ public:
 
 	void MoveLeftRight(const FInputActionValue& Value);
 
+	void MoveUpAndDown(const FInputActionValue& Value);
+
 	void Jump();
 
 private:
@@ -38,9 +40,14 @@ private:
 
 	bool bJumping;
 
+	bool bOnLadder;
+
 public:
 	bool IsJumping() const { return bJumping; }
 
 	void SetJumping(bool bNewJumping) { this->bJumping = bNewJumping; }
 
+	bool IsOnLadder() const { return bOnLadder; }
+
+	void SetOnLadder(bool bNewOnLadder) { this->bOnLadder = bNewOnLadder; }
 };

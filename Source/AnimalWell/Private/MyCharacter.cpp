@@ -50,10 +50,16 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	//增强输入绑定
 	if (UEnhancedInputComponent* PlayerEnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		if (MoveAction) {
 			PlayerEnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::EnhanceMove);
 		}
+
+		if (ClimbAction) {
+			PlayerEnhancedInputComponent->BindAction(ClimbAction, ETriggerEvent::Triggered, this, &AMyCharacter::EnhanceClimb);
+		}
+
 		if (JumpAction) {
 			PlayerEnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AMyCharacter::EnhanceJump);
 			PlayerEnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -93,5 +99,12 @@ void AMyCharacter::PawnClientRestart()
 			Subsystem->ClearAllMappings();
 			Subsystem->AddMappingContext(InputMappingContext, InputMappingPriority);
 		}
+	}
+}
+
+void AMyCharacter::EnhanceClimb(const FInputActionValue& Value)
+{
+	if (CharacterGameComponent) {
+		CharacterGameComponent->MoveUpAndDown(Value);
 	}
 }

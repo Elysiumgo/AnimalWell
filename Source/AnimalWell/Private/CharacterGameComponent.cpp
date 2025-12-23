@@ -44,6 +44,15 @@ void UCharacterGameComponent::MoveLeftRight(const FInputActionValue& Value)
 	}
 }
 
+void UCharacterGameComponent::MoveUpAndDown(const FInputActionValue& Value)
+{
+	if (CurrentCharacter && Value.GetMagnitude() != 0.f)
+	{
+		FVector WorldDirection = FVector(0.f, 0.f, 1.f);
+		CurrentCharacter->AddMovementInput(WorldDirection, Value.GetMagnitude(), false);
+	}
+}
+
 void UCharacterGameComponent::Jump()
 {
 	bJumping = true;

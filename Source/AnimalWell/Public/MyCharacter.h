@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Controls|Input Actions")
 	UInputAction* JumpAction;
 
+	UPROPERTY(EditAnywhere, Category = "Controls|Input Actions")
+	UInputAction* ClimbAction;
+
 	UPROPERTY(EditAnywhere, Category = "Controls|Input Mapping")
 	UInputMappingContext* InputMappingContext;
 
@@ -53,8 +56,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void EnhanceMove(const FInputActionValue& Value);
-
 	void EnhanceJump(const FInputActionValue& Value);
+	void EnhanceClimb(const FInputActionValue& Value);
 
 private:
 	//Ö½ÍÞÍÞ×é¼þ
