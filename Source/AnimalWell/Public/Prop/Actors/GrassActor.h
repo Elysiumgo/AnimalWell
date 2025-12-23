@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Prop/Actors/BasePropActor.h"
 #include "GrassActor.generated.h"
-
 /**
  * 
  */
@@ -18,9 +17,21 @@ class ANIMALWELL_API AGrassActor : public ABasePropActor
 
 public:
 	AGrassActor();
-	virtual void OnConstruction(const FTransform& Transform) override;
 
 	virtual void ActionEvent(FVector BeginLoaction = FVector::ForwardVector) override;
 	UFUNCTION()
 	void StopFlut();
+	void BeginPlay();
+
+
+
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UPaperFlipbookComponent* GrassFlipbookComp;
+
+	//存放合成的动画资源
+	UPROPERTY(EditAnywhere, Category = "Animations")
+	class UPaperFlipbook* SwayAnimation;
+
 };
