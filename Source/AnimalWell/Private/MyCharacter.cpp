@@ -4,6 +4,9 @@
 #include "MyCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "CharacterGameComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 
 // Sets default values
 
@@ -23,6 +26,8 @@ AMyCharacter::AMyCharacter()
 
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	SceneComponent->SetupAttachment(RootComponent);
+
+	CharacterGameComponent = CreateDefaultSubobject<UCharacterGameComponent>(TEXT("Character"));
 
 }
 
@@ -45,6 +50,48 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	
+	if (UEnhancedInputComponent* PlayerEnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
+		if (MoveAction) {
+			PlayerEnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::EnhanceMove);
+		}
+		if (JumpAction) {
+			PlayerEnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AMyCharacter::EnhanceJump);
+			PlayerEnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		}
+	}
 }
 
+void AMyCharacter::EnhanceMove(const FInputActionValue& Value)
+{
+	if (CharacterGameComponent) {
+		CharacterGameComponent->MoveLeftRight(Value);
+	}
+}
+
+void AMyCharacter::EnhanceJump(const FInputActionValue& Value)
+{
+	if (CharacterGameComponent) {
+		Super::Jump();
+		CharacterGameComponent->Jump();
+	}
+}
+
+void AMyCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	if (CharacterGameComponent) {
+		CharacterGameComponent->SetJumping(false);
+	}
+}
+
+void AMyCharacter::PawnClientRestart()
+{
+	Super::PawnClientRestart();
+	if (APlayerController* LocalPlayer = Cast<APlayerController>(GetController())) {
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer->GetLocalPlayer())) {
+			Subsystem->ClearAllMappings();
+			Subsystem->AddMappingContext(InputMappingContext, InputMappingPriority);
+		}
+	}
+}
