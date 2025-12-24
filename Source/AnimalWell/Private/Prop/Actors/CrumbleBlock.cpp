@@ -28,7 +28,7 @@ void ACrumbleBlock::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimi
     // 只要撞到的是玩家（Pawn），就触发
     if (Other && Other->IsA(APawn::StaticClass()))
     {
-        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Hit Success!"));
+        //if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Hit Success!"));
         StartCrumbling();
     }
 }
