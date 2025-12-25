@@ -16,28 +16,28 @@ AFirecrackerActor::AFirecrackerActor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//æ ¹ç»„ä»¶ã€æ¸²æŸ“ç»„ä»¶åˆå§‹åŒ–
+	//¸ù×é¼ş¡¢äÖÈ¾×é¼ş³õÊ¼»¯
 	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	FirecrackerSpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>("FirecrackerSpriteComp");
 	FirecrackerSpriteComp->SetupAttachment(this->RootComponent);
 	FirecrackerSpriteComp->SetRelativeScale3D(FVector(0.2f));
 	FirecrackerSpriteComp->SetCollisionProfileName(TEXT("NoCollision"));
 
-	//ç¢°æ’æ£€æµ‹åˆå§‹åŒ–ã€ç¢°æ’é¢„è®¾
+	//Åö×²¼ì²â³õÊ¼»¯¡¢Åö×²Ô¤Éè
 	FirecrackerCollisionComponent = CreateDefaultSubobject<UCapsuleComponent>("FirecrackerCollisionComponent");
 	FirecrackerCollisionComponent->SetupAttachment(this->FirecrackerSpriteComp);
 	FirecrackerCollisionComponent->SetCollisionProfileName(TEXT("OverlapAll"));
-	//èƒ¶å›Šä½“å°ºå¯¸ï¼ˆå¯ä»¥è‡ªå·±è°ƒï¼‰
+	//½ºÄÒÌå³ß´ç£¨¿ÉÒÔ×Ô¼ºµ÷£©
 	FirecrackerCollisionComponent->SetCapsuleRadius(32.f);
 	FirecrackerCollisionComponent->SetCapsuleHalfHeight(64.f);
 	FirecrackerCollisionComponent->bHiddenInGame = true;
 
-	//ç©ºä¸­ç¿»è½¬ç»„ä»¶åˆå§‹åŒ–ï¼ŒæŠ›å‡ºæ—¶æ¿€æ´»
+	//¿ÕÖĞ·­×ª×é¼ş³õÊ¼»¯£¬Å×³öÊ±¼¤»î
 	MyRotatingMovementComp = CreateDefaultSubobject<URotatingMovementComponent>("RotatingMovementComponent");
 	MyRotatingMovementComp->RotationRate = FRotator(500.f,0,0);
 	MyRotatingMovementComp->bAutoActivate = false;
 
-	//æŠ›ç‰©çº¿è¿åŠ¨ç»„ä»¶åˆå§‹åŒ–,æŠ›å‡ºæ—¶æ¿€æ´»
+	//Å×ÎïÏßÔË¶¯×é¼ş³õÊ¼»¯,Å×³öÊ±¼¤»î
 	MyProjectileMovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
 	MyProjectileMovementComp->InitialSpeed = 500.f;
 	MyProjectileMovementComp->MaxSpeed = 500.f;
@@ -53,7 +53,7 @@ void AFirecrackerActor::BeginPlay()
 
 }
 
-//çˆ†ç‚¸é”€æ¯
+//±¬Õ¨Ïú»Ù
 void AFirecrackerActor::DestroyFirecracker()
 {
 	MyRotatingMovementComp->Deactivate();
