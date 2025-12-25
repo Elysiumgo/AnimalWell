@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleEmitter.h"
+#include "Prop/Actors/GhostActor.h"
 
 // Sets default values
 AFirecrackerActor::AFirecrackerActor()
@@ -59,8 +60,14 @@ void AFirecrackerActor::DestroyFirecracker()
 	MyProjectileMovementComp->Deactivate();
 	UParticleSystem * Boom = LoadObject<UParticleSystem>(this,TEXT("/Script/Engine.ParticleSystem'/Game/Prop/Particles/PS_Explosion_Air_Big_03.PS_Explosion_Air_Big_03'"));
 	UGameplayStatics::SpawnEmitterAtLocation(this,Boom,GetActorLocation());
+	
+	AGhostActor* Ghost = Cast<AGhostActor>( UGameplayStatics::GetActorOfClass(this,AGhostActor::StaticClass()));
+	if (Ghost&&(GetActorLocation() - Ghost->GetActorLocation()).Length() < 150.f)
+	{
+		Ghost->Destroy();
+	}
 	Destroy();
-}
+}	
 
 // Called every frame
 void AFirecrackerActor::Tick(float DeltaTime)
@@ -68,7 +75,7 @@ void AFirecrackerActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-//构造脚本中为 SpriteComp 加上 Sprite，硬加载
+
 void AFirecrackerActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
@@ -82,16 +89,16 @@ void AFirecrackerActor::OnConstruction(const FTransform& Transform)
 	}
 }
 
-//传入一个 FVector形式的角度，该角度需要由 PlayerController 传入
+
 void AFirecrackerActor::ActionEvent(FVector BeginLoaction)
 {
 	SetActorRotation(BeginLoaction.Rotation());
 	
-	//激活抛物线运动、旋转组件
+
 	MyRotatingMovementComp->Activate();
 	
 	MyProjectileMovementComp->Activate();
-	//运动 0.5s 后消失
+
 	GetWorld()->GetTimerManager().SetTimer(CrackerHandle,this,&AFirecrackerActor::DestroyFirecracker,0.5f,false);
 	
 }

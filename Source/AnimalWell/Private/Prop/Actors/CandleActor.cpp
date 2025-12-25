@@ -2,12 +2,17 @@
 #include "Prop/Actors/CandleActor.h" // Debug«∞÷√
 #include "PaperSpriteComponent.h"
 #include "PaperSprite.h"
+#include "Kismet/GameplayStatics.h"
+#include "Prop/Actors/GhostActor.h"
+
+
 
 ACandleActor::ACandleActor()
 {
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root0"));
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp0"));
 	SpriteComp->SetupAttachment(RootComponent);
+	
 }
 
 void ACandleActor::BeginPlay()
@@ -15,6 +20,8 @@ void ACandleActor::BeginPlay()
 	Super::BeginPlay();
 	UPaperSprite * Candle = LoadObject<UPaperSprite>(this,TEXT("/Script/Paper2D.PaperSprite'/Game/Prop/Textures/Sprites/Mediavel_Sprite.Mediavel_Sprite'"));
 	SpriteComp->SetSprite(Candle);
+	SpriteComp->SetCollisionProfileName(TEXT("Prop"));
+	CollisionBox->SetCollisionProfileName(TEXT("Prop"));
 }
 
 void ACandleActor::ActionEvent(FVector BeginLoaction)
@@ -23,4 +30,9 @@ void ACandleActor::ActionEvent(FVector BeginLoaction)
 	OpenFlag = true;
 	UPaperSprite * CandleFire = LoadObject<UPaperSprite>(this,TEXT("/Script/Paper2D.PaperSprite'/Game/Prop/Textures/Sprites/MediavelFree_Sprite.MediavelFree_Sprite'"));
 	SpriteComp->SetSprite(CandleFire);
+	AGhostActor* Ghost = Cast<AGhostActor>( UGameplayStatics::GetActorOfClass(this,AGhostActor::StaticClass()));
+    if (Ghost)
+    {
+    	Ghost->Destroy();
+    }
 }

@@ -29,15 +29,15 @@ void ALightActor::BeginPlay()
 void ALightActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	SwingSpeed += -SwingAngle * 0.02f;  // 回中
-	SwingSpeed *= 0.98f;                // 摩擦
-	SwingAngle += SwingSpeed * DeltaTime * 60.f;           // 移动
+	SwingSpeed += -SwingAngle * 0.02f;  
+	SwingSpeed *= 0.98f;               
+	SwingAngle += SwingSpeed * DeltaTime * 60.f;          
     
-	// 限制范围
+	
 	if (SwingAngle > 30) SwingAngle = 30, SwingSpeed *= -0.7f;
 	if (SwingAngle < -30) SwingAngle = -30, SwingSpeed *= -0.7f;
     
-	// 旋转
+	
 	SetActorRotation(FRotator(SwingAngle, 0, 0));
 	TArray<AActor*> OutActors;
 	UGameplayStatics::GetAllActorsOfClass(this,AStaticMeshActor::StaticClass(),OutActors);
@@ -60,11 +60,11 @@ void ALightActor::Tick(float DeltaTime)
 
 void ALightActor::ActionEvent(FVector BeginLoaction)
 {
-	// 简单判断：碰撞点X坐标 > 自身X坐标 = 右边碰撞
+	
 	if (BeginLoaction.X > GetActorLocation().X)
-		SwingSpeed -= 10.0f;  // 向左摆
+		SwingSpeed -= 10.0f;  
 	else
-		SwingSpeed += 10.0f;  // 向右摆
+		SwingSpeed += 10.0f; 
 }
 
 void ALightActor::OnConstruction(const FTransform& Transform)

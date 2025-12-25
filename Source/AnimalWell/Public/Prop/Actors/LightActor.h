@@ -35,13 +35,13 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	UPROPERTY(EditAnywhere)
 	FName MName;
-	// 钟摆核心变量
-	float CurrentAngle;     // 当前角度
-	float CurrentSpeed;     // 当前速度
-	float MaxSwingAngle = 30.f;    // 最大摆动角度
+
+	float CurrentAngle;   
+	float CurrentSpeed;    
+	float MaxSwingAngle = 30.f;    
     
-	float SwingAngle;   // 当前角度
-	float SwingSpeed;   // 当前速度
+	float SwingAngle;   
+	float SwingSpeed;   
     
 	
 

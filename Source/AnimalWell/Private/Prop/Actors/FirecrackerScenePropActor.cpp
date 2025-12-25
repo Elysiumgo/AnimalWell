@@ -7,7 +7,7 @@
 
 AFirecrackerScenePropActor::AFirecrackerScenePropActor()
 {
-	//根组件、渲染组件初始化
+
 	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	FirecrackerSpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>("FirecrackerSpriteComp");
 	FirecrackerSpriteComp->SetupAttachment(this->RootComponent);

@@ -6,6 +6,7 @@
 
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
+#include "Prop/Actors/CandleActor.h"
 #include "Prop/Actors/FirecrackerActor.h"
 #include "Prop/Actors/FirecrackerScenePropActor.h"
 #include "Prop/Actors/LightActor.h"
@@ -38,7 +39,7 @@ void UInteractionPropComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	TracePropForword();
 	TracePropBack();
 	BindKeyDownEvent();
-	TracePropToggleAndFirecracker();
+	TracePropToggleAndFirecrackerAndCandle();
 }
 
 void UInteractionPropComponent::TracePropForword()
@@ -90,7 +91,7 @@ void UInteractionPropComponent::TracePropBack()
 	}
 }
 
-void UInteractionPropComponent::TracePropToggleAndFirecracker()
+void UInteractionPropComponent::TracePropToggleAndFirecrackerAndCandle()
 {
 	TArray<FHitResult> OutHits;
 	FCollisionQueryParams Params;
@@ -117,6 +118,11 @@ void UInteractionPropComponent::TracePropToggleAndFirecracker()
 			FirecrackerCount ++ ;
 			FirecrackerWidget->SetCrackerCount(FirecrackerCount);
 			Firecracker->ActionEvent();
+		}
+		ACandleActor* Candle = Cast<ACandleActor>(HitResult.GetActor());
+		if (Candle)
+		{
+			Candle->ActionEvent();
 		}
 	}
 }

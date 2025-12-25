@@ -20,8 +20,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	//添加碰撞盒组件，在蓝图里可见
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Prop")
 	UBoxComponent* CollisionBox;
 

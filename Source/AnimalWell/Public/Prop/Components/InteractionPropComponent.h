@@ -33,7 +33,7 @@ public:
 
 	void TracePropForword();
 	void TracePropBack();
-	void TracePropToggleAndFirecracker();
+	void TracePropToggleAndFirecrackerAndCandle();
 
 	void BindKeyDownEvent();
 

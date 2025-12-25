@@ -7,7 +7,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
-
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -16,25 +16,26 @@ AGhostActor::AGhostActor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//根组件、渲染组件初始化
+
 	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	RenderGhost = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("RenderGhostComp"));
 	RenderGhost->SetupAttachment(RootComponent);
+	RenderGhost->SetRelativeScale3D(FVector(0.2f));
 
-	//碰撞检测初始化、碰撞预设
+	
 	GhostCollisionComponent = CreateDefaultSubobject<UCapsuleComponent>("GhostCollisionComponent");
 	GhostCollisionComponent->SetupAttachment(RenderGhost);
 	GhostCollisionComponent->SetCollisionProfileName(TEXT("OverlapAll"));
-	//碰撞体大小
+
 	GhostCollisionComponent->SetCapsuleRadius(72.f);
 	GhostCollisionComponent->SetCapsuleHalfHeight(144.f);
 	GhostCollisionComponent->bHiddenInGame = true;
 
-	//初始化移动组件
+
 	MyMovementComponent  = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComp"));
-	MyMovementComponent->InitialSpeed = 500.f;
-	MyMovementComponent->MaxSpeed = 500.f;
-	//重力为 0，即直线运动
+	MyMovementComponent->InitialSpeed = 60.f;
+	MyMovementComponent->MaxSpeed = 60.f;
+
 	MyMovementComponent->ProjectileGravityScale = 0.f;
 	MyMovementComponent->bAutoActivate = false;
 	
@@ -44,7 +45,7 @@ AGhostActor::AGhostActor()
 void AGhostActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	ActionEvent(UGameplayStatics::GetPlayerPawn(GetWorld(),0)->GetActorLocation());
 }
 
 // Called every frame
@@ -58,7 +59,7 @@ void AGhostActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	//硬加载为渲染资产赋值
+	
 	if (!GhostFlipbook_Idle)
 	{
 		GhostFlipbook_Idle = LoadObject<UPaperFlipbook>(this,TEXT("/Script/Paper2D.PaperFlipbook'/Game/Prop/PaperFlipbook/PF_Ghost_Idle.PF_Ghost_Idle'"));
@@ -76,18 +77,18 @@ void AGhostActor::OnConstruction(const FTransform& Transform)
 		GhostFlipbook_Dash = LoadObject<UPaperFlipbook>(this,TEXT("/Script/Paper2D.PaperFlipbook'/Game/Prop/PaperFlipbook/BlueWizardDash.BlueWizardDash'"));
 	}
 
-	//默认为idle
+
 	RenderGhost->SetFlipbook(GhostFlipbook_Idle);
 }
 
-// 逻辑 : 蓝鬼状态切换，并且更换 flipbook
+
 void AGhostActor::ChangeGhostState(EGhostState NewGhostState)
 {
 	CurrentGhostState = NewGhostState;
 	RenderGhost->SetFlipbook(GetGhostFlipbook(CurrentGhostState));
 }
 
-//根据传入的状态返回对应的 flipbook 资产
+
 UPaperFlipbook* AGhostActor::GetGhostFlipbook(EGhostState GhostState)
 {
 	UPaperFlipbook* TempFlipbook = nullptr;
@@ -113,17 +114,12 @@ UPaperFlipbook* AGhostActor::GetGhostFlipbook(EGhostState GhostState)
 void AGhostActor::ActionEvent(FVector BeginLoaction)
 {
 	Super::ActionEvent(BeginLoaction);
-
-	//用于测试，设置目的地（实际是  player 的 location）
-	BeginLoaction = FVector(-1000.f,0,-500.f);
-	
-	//朝 beginlocation（这里应该叫destination） 移动
 	GhostMove(BeginLoaction);
 }
 
 void AGhostActor::UpdateTargetLocation()
 {
-	GhostMove(FVector(-1000.f,0,-500.f));
+	GhostMove(UGameplayStatics::GetPlayerPawn(GetWorld(),0)->GetActorLocation());
 }
 
 void AGhostActor::GhostMove(FVector Destination)
@@ -132,17 +128,17 @@ void AGhostActor::GhostMove(FVector Destination)
 
 	TargetLocation = Destination;
 
-	//设置小鬼朝向
+	
 	MoveDirection = (Destination.X - GetActorLocation().X) > 0 ? 1 : -1;
 	SetActorRotation(FRotator(0.f, (Destination.X - GetActorLocation().X) > 0 ? 0 : 180, 0.f));
 
 	if (MyMovementComponent)
 	{
 		MyMovementComponent->Activate();
-		MyMovementComponent->Velocity = FVector(MoveDirection * 500,0.f,0.f);
+		MyMovementComponent->Velocity = FVector(MoveDirection * 60,0.f,0.f);
 	}
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle,this,&AGhostActor::UpdateTargetLocation,FMath::RandRange(3,7),true);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle,this,&AGhostActor::UpdateTargetLocation,FMath::RandRange(5,10),true);
 }
 
 void AGhostActor::UpdateGhostState()
@@ -152,21 +148,21 @@ void AGhostActor::UpdateGhostState()
 		return;
 	}else if (CurrentGhostState == EGhostState::Walk)
 	{
-		//朝目标移动中，在 x 分量插值小于 500 时俯冲
-		if ((GetActorLocation().X - TargetLocation.X) < 500.f && (GetActorLocation().Z - TargetLocation.Z) > 10.f)
+		
+		if (FMath::Abs(GetActorLocation().X - TargetLocation.X) < 60.f && FMath::Abs(GetActorLocation().Z - TargetLocation.Z) > 1.f)
 		{
 			ChangeGhostState(EGhostState::Dash);
 		}
 	}else if (CurrentGhostState == EGhostState::Dash)
 	{
 		FVector NewDirection = (TargetLocation - GetActorLocation()).GetSafeNormal();
-		//当达到目标时候，切换为 idle
+		
 		if ((TargetLocation - GetActorLocation()).Length() < 10.f)
 		{
 			ChangeGhostState(EGhostState::Walk);
-			MyMovementComponent->Velocity = FVector(MoveDirection * 500,0.f,0.f);
+			MyMovementComponent->Velocity = FVector(MoveDirection * 60,0.f,0.f);
 			return;
 		}
-		MyMovementComponent->Velocity = NewDirection * 500.f;
+		MyMovementComponent->Velocity = NewDirection * 60.f;
 	}
 }
