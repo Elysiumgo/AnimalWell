@@ -3,20 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/HUD.h"
+#include "BloodHUD.h" //继承自血量 HUD
 #include "MenuHUD.generated.h"
 
 /**
- * 
+ * 菜单 HUD，现在继承自 ABloodHUD，这样同一 HUD 实例可以同时负责血量绘制和菜单 Slate
  */
 UCLASS()
-class ANIMALWELL_API AMenuHUD : public AHUD
+class ANIMALWELL_API AMenuHUD : public ABloodHUD
 {
 	GENERATED_BODY()
 	
 protected:
-	TSharedPtr<class SWidget> MenuWidgetContainer; //菜单 UI Widget 容器指针
-	TSharedPtr<class SMenuWidget> MenuWidget;	//菜单 UI Widget 指针
+	//使用 SWeakWidget 容器承载菜单 Slate
+	TSharedPtr<class SWeakWidget> MenuWidgetContainer;
+	TSharedPtr<class SMenuWidget> MenuWidget;
 
 	virtual void BeginPlay() override;
 

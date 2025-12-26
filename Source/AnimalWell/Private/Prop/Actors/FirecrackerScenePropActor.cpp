@@ -4,6 +4,7 @@
 #include "Prop/Actors/FirecrackerScenePropActor.h"
 
 #include "PaperSpriteComponent.h"
+#include "PaperSprite.h"
 
 AFirecrackerScenePropActor::AFirecrackerScenePropActor()
 {

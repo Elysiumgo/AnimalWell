@@ -3,9 +3,11 @@
 
 #include "Prop/Actors/LightActor.h"
 #include "PaperSpriteComponent.h"
-#include "PaperSprite.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "PaperSprite.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/World.h"
 
 
 ALightActor::ALightActor()

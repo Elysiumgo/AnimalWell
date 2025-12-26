@@ -8,7 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Prop/Components/InteractionPropComponent.h"
-#include "Viewports/SDepthBar.h"
+#include "Viewport.generated.h"
 
 // Sets default values
 

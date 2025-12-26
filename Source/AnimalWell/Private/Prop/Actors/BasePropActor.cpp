@@ -12,15 +12,15 @@ ABasePropActor::ABasePropActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 
-	//创建基类中的碰撞盒子组件
+
+	//创建碰撞盒，设为根组件
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	//根组件为碰撞组件
 	RootComponent = CollisionBox;
 
-	//设置碰撞预设为 场景交互
-	CollisionBox->SetCollisionProfileName(TEXT("Prop"));
+	//设置碰撞属性，触发器模式，不阻挡玩家但能感应
+	CollisionBox->SetCollisionProfileName(TEXT("Trigger"));
 
-	//设置碰撞回调函数
+	//当有东西重叠时，调用OnOverlapBegin
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ABasePropActor::OnOverlapBegin);
 
 
@@ -41,17 +41,16 @@ void ABasePropActor::Tick(float DeltaTime)
 
 }
 
-
+//碰撞后逻辑
 void ABasePropActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//判断碰撞对象是否有值或是否等于挂载者资深 满足进行碰撞事件调用
+	//检查撞到的是不是玩家
 	if (OtherActor && (OtherActor != this))
 	{
-		 // 判断是否为玩家 
+		//尝试看看撞到的是不是一个Pawn，如果是则传入玩家位置
 		APawn* PawnActor = Cast<APawn>(OtherActor);
-		//如果是玩家
 		if (PawnActor)
-		{ //执行触发条件
+		{
 			ActionEvent(PawnActor->GetActorLocation());
 		}
 	}
@@ -61,5 +60,7 @@ void ABasePropActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 void ABasePropActor::ActionEvent(FVector BeginLoaction)
 {
+	//空，给子类实现效果
+	
 }
 
